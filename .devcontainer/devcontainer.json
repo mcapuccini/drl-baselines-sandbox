@@ -1,0 +1,15 @@
+{
+	"name": "dlr-baselines-sandbox",
+	"context": "..",
+	"dockerFile": "Dockerfile",
+	"settings": { 
+		"terminal.integrated.shell.linux": "/bin/bash",
+		"python.pythonPath": "/root/venv/bin/python3",
+		"python.linting.enabled": true,
+		"python.linting.pylintPath": "/root/venv/bin/pylint"
+	},
+	"extensions": [
+		"ms-python.python",
+		"ms-azuretools.vscode-docker"
+	]
+}
