@@ -4,13 +4,14 @@
 	"dockerFile": "Dockerfile",
 	"settings": { 
 		"terminal.integrated.shell.linux": "/bin/bash",
-		"python.pythonPath": "/root/venv/bin/python3",
+		"python.pythonPath": "/usr/local/bin/python",
 		"python.linting.enabled": true,
-		"python.linting.pylintPath": "/root/venv/bin/pylint"
+		"python.linting.pylintPath": "/usr/local/bin/pylint"
 	},
 	"extensions": [
 		"ms-python.python",
 		"ms-azuretools.vscode-docker"
 	],
+	"remoteUser": "vscode",
 	"mounts": ["source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,consistency=default"]
 }

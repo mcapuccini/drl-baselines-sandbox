@@ -1,9 +1,11 @@
-# Credits to lazy_programmer: https://github.com/lazyprogrammer/machine_learning_examples/blob/master/tf2.0/rl_trader.py 
+# Inspired to: https://github.com/lazyprogrammer/machine_learning_examples/blob/master/tf2.0/rl_trader.py 
 
-import numpy as np
 import itertools
 
-class MultiStockEnv:
+import gym
+import numpy as np
+
+class MultiStockEnv(gym.Env):
   """
   A 3-stock trading environment.
   State: vector of size 7 (n_stock * 2 + 1)
@@ -20,6 +22,10 @@ class MultiStockEnv:
     - 1 = hold
     - 2 = buy
   """
+
+  # gym metadata
+  metadata = {'render.modes': ['console']}
+
   def __init__(self, data, initial_investment=20000):
     # data
     self.stock_price_history = data
@@ -65,6 +71,14 @@ class MultiStockEnv:
     # conform to the Gym API
     return self._get_obs(), reward, done, info
 
+  def render(self, mode='console'):
+    if mode != 'console':
+      raise NotImplementedError()
+    # print some info
+    print("Stocks owned:", self.stock_owned)
+    print("Stocks price:", self.stock_price)
+    print("Cash in hand:" * self.cash_in_hand)
+
   def _get_obs(self):
     obs = np.empty(self.state_dim)
     obs[:self.n_stock] = self.stock_owned
@@ -77,13 +91,6 @@ class MultiStockEnv:
 
   def _trade(self, action):
     # index the action we want to perform
-    # 0 = sell
-    # 1 = hold
-    # 2 = buy
-    # e.g. [2,1,0] means:
-    # buy first stock
-    # hold second stock
-    # sell third stock
     action_vec = self.action_list[action]
     # determine which stocks to buy or sell
     sell_index = [] # stores index of stocks we want to sell

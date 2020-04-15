@@ -1,18 +1,40 @@
 # Start from stable-baselines container
-FROM stablebaselines/stable-baselines-cpu:v2.10.0
+FROM tensorflow/tensorflow:1.14.0-py3
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Configure and install deps
+# Add a non-root user with sudo access.
+ARG USERNAME=vscode
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+# Configure apt and install packages
 RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
     #
     # Install apt deps
-    && apt-get -y install git iproute2 procps lsb-release \
+    && apt-get -y install \
+        sudo \
+        git \
+        iproute2 \
+        procps \
+        lsb-release \
+        cmake \
+        libopenmpi-dev \
+        python3-dev \
+        zlib1g-dev \
+        libsm6 \
+        libxrender1 \
     #
     # Install pip deps
-    && pip --disable-pip-version-check --no-cache-dir install pylint \
+    && pip --disable-pip-version-check --no-cache-dir install \
+        pylint \
+        stable-baselines[mpi] \
+    #
+    # Create a non-root user to use if preferred
+    && groupadd --gid $USER_GID $USERNAME \
+    && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
     #
     # Clean up
     && apt-get autoremove -y \
