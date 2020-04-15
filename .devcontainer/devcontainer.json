@@ -13,5 +13,5 @@
 		"ms-azuretools.vscode-docker"
 	],
 	"remoteUser": "vscode",
-	"mounts": ["source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,consistency=default"]
+	"mounts": ["source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=default"]
 }
