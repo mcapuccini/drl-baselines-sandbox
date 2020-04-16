@@ -18,4 +18,4 @@ check_env(env)
 
 # Train
 model = DQN('MlpPolicy', env, verbose=1, tensorboard_log="./dqn_stocks_tensorboard/")
-model.learn(total_timesteps=5000)
+model.learn(total_timesteps=100000)
