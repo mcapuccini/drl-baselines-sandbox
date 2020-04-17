@@ -13,9 +13,15 @@ response = urlopen(STOCKS_URL)
 data = pd.read_csv(response).values
 
 # Init and check the environment
-env = MultiStockEnv(data)
+env = MultiStockEnv(data, initial_investment=20000)
 check_env(env)
 
 # Train
-model = DQN('MlpPolicy', env, verbose=1, tensorboard_log="./dqn_stocks_tensorboard/")
-model.learn(total_timesteps=100000)
+model = DQN('MlpPolicy', env, verbose=1, tensorboard_log="./logs", 
+    gamma=0.95, 
+    buffer_size=500, 
+    exploration_final_eps=0.01, 
+    double_q=False, 
+    learning_starts=500,
+    target_network_update_freq=30)
+model.learn(total_timesteps=100000, tb_log_name="stock_trading")

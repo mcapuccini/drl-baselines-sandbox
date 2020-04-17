@@ -6,8 +6,10 @@ import gym
 import numpy as np
 from gym import spaces
 
-class MultiStockEnv(gym.Env):
-  def __init__(self, data, initial_investment=20000):
+from sklearn.preprocessing import StandardScaler
+
+class MultiStockEnvUwrapped:
+  def __init__(self, data, initial_investment):
     # data
     self.stock_price_history = data
     self.n_step, self.n_stock = self.stock_price_history.shape
@@ -17,16 +19,11 @@ class MultiStockEnv(gym.Env):
     self.stock_owned = None
     self.stock_price = None
     self.cash_in_hand = None
-    self.action_space = spaces.Discrete(3**self.n_stock)
+    self.action_space = np.arange(3**self.n_stock)
     # action permutations
     self.action_list = list(map(list, itertools.product([0, 1, 2], repeat=self.n_stock)))
     # calculate size of state
     self.state_dim = self.n_stock * 2 + 1
-    # set observation space
-    n_stock_high = np.full(self.n_stock, self.n_step)
-    stock_price_high = np.full(self.n_stock, data.max())
-    high = np.concatenate((n_stock_high, stock_price_high, np.array([data.sum()])))
-    self.observation_space = spaces.Box(low=np.empty(self.state_dim), high=high, dtype=np.float32)
     # reset environment
     self.reset()
 
@@ -63,12 +60,11 @@ class MultiStockEnv(gym.Env):
     obs[self.n_stock:2*self.n_stock] = self.stock_price
     obs[-1] = self.cash_in_hand
     return obs
-    
+
   def _get_val(self):
     return self.stock_owned.dot(self.stock_price) + self.cash_in_hand
 
   def _trade(self, action):
-    # index the action we want to perform
     action_vec = self.action_list[action]
     # determine which stocks to buy or sell
     sell_index = [] # stores index of stocks we want to sell
@@ -96,3 +92,41 @@ class MultiStockEnv(gym.Env):
             self.cash_in_hand -= self.stock_price[i]
           else:
             can_buy = False
+
+class MultiStockEnv(gym.Env):
+  """Environment that follows gym interface, with obs. space standardization"""
+  def __init__(self, data, initial_investment):
+    super(MultiStockEnv, self).__init__()
+    self.env = MultiStockEnvUwrapped(data, initial_investment)
+    self.action_space = spaces.Discrete(self.env.action_space.size)
+    self.observation_space = spaces.Box(low=-4, high=4,shape=(self.env.state_dim,), dtype=np.float32)
+    self.obs_scaler = self._get_scaler()
+    self.reset()
+
+  def step(self, action):
+    obs, reward, done, info = self.env.step(action)
+    return self.obs_scaler.transform([obs])[0], reward, done, info
+
+  def reset(self):
+    obs = self.env.reset()
+    return self.obs_scaler.transform([obs])[0]
+
+  def render(self):
+    pass
+
+  def close (self):
+    pass
+
+  def _get_scaler(self):
+    states = []
+    self.env.reset()
+    for _ in range(self.env.n_step):
+      action = np.random.choice(self.env.action_space)
+      obs, _, done, _ = self.env.step(action)
+      states.append(obs)
+      if done:
+        break
+    self.env.reset()
+    scaler = StandardScaler()
+    scaler.fit(states)
+    return scaler

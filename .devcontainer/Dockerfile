@@ -31,6 +31,7 @@ RUN apt-get update \
     && pip --disable-pip-version-check --no-cache-dir install \
         pylint \
         stable-baselines[mpi] \
+        scikit-learn \
     #
     # Create a non-root user to use if preferred
     && groupadd --gid $USER_GID $USERNAME \
