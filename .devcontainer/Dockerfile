@@ -5,7 +5,7 @@ FROM tensorflow/tensorflow:1.14.0-py3
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Add a non-root user with sudo access.
-ARG USERNAME=vscode
+ARG USERNAME=default
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
@@ -15,23 +15,24 @@ RUN apt-get update \
     #
     # Install apt deps
     && apt-get -y install \
-        sudo \
-        git \
-        iproute2 \
-        procps \
-        lsb-release \
-        cmake \
-        libopenmpi-dev \
-        python3-dev \
-        zlib1g-dev \
-        libsm6 \
-        libxrender1 \
+    sudo \
+    git \
+    iproute2 \
+    procps \
+    lsb-release \
+    cmake \
+    libopenmpi-dev \
+    python3-dev \
+    zlib1g-dev \
+    libsm6 \
+    libxrender1 \
     #
     # Install pip deps
     && pip --disable-pip-version-check --no-cache-dir install \
-        pylint \
-        stable-baselines[mpi] \
-        scikit-learn \
+    pylint \
+    autopep8 \
+    stable-baselines[mpi] \
+    scikit-learn \
     #
     # Create a non-root user to use if preferred
     && groupadd --gid $USER_GID $USERNAME \

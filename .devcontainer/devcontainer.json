@@ -6,13 +6,18 @@
 		"terminal.integrated.shell.linux": "/bin/bash",
 		"python.pythonPath": "/usr/local/bin/python",
 		"python.linting.enabled": true,
-		"python.linting.pylintPath": "/usr/local/bin/pylint"
+		"python.linting.pylintPath": "/usr/local/bin/pylint",
+		"python.formatting.autopep8Args": ["--indent-size=2"],
+		"[python]": {
+			"editor.insertSpaces": true,
+			"editor.tabSize": 2
+		}
 	},
 	"extensions": [
 		"ms-python.python",
 		"ms-azuretools.vscode-docker"
 	],
-	"remoteUser": "vscode",
+	"remoteUser": "default",
 	"mounts": ["source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=default"],
 	"forwardPorts": [6006]
 }

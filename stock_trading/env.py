@@ -1,5 +1,3 @@
-# Inspired to: https://github.com/lazyprogrammer/machine_learning_examples/blob/master/tf2.0/rl_trader.py 
-
 import itertools
 
 import gym
@@ -8,7 +6,12 @@ from gym import spaces
 
 from sklearn.preprocessing import StandardScaler
 
+
 class MultiStockEnvUwrapped:
+  """ 
+  Credits to: https://github.com/lazyprogrammer/machine_learning_examples/blob/master/tf2.0/rl_trader.py 
+  """
+
   def __init__(self, data, initial_investment):
     # data
     self.stock_price_history = data
@@ -21,7 +24,8 @@ class MultiStockEnvUwrapped:
     self.cash_in_hand = None
     self.action_space = np.arange(3**self.n_stock)
     # action permutations
-    self.action_list = list(map(list, itertools.product([0, 1, 2], repeat=self.n_stock)))
+    self.action_list = list(
+        map(list, itertools.product([0, 1, 2], repeat=self.n_stock)))
     # calculate size of state
     self.state_dim = self.n_stock * 2 + 1
     # reset environment
@@ -67,8 +71,8 @@ class MultiStockEnvUwrapped:
   def _trade(self, action):
     action_vec = self.action_list[action]
     # determine which stocks to buy or sell
-    sell_index = [] # stores index of stocks we want to sell
-    buy_index = [] # stores index of stocks we want to buy
+    sell_index = []  # stores index of stocks we want to sell
+    buy_index = []  # stores index of stocks we want to buy
     for i, a in enumerate(action_vec):
       if a == 0:
         sell_index.append(i)
@@ -88,18 +92,21 @@ class MultiStockEnvUwrapped:
       while can_buy:
         for i in buy_index:
           if self.cash_in_hand > self.stock_price[i]:
-            self.stock_owned[i] += 1 # buy one share
+            self.stock_owned[i] += 1  # buy one share
             self.cash_in_hand -= self.stock_price[i]
           else:
             can_buy = False
 
+
 class MultiStockEnv(gym.Env):
   """Environment that follows gym interface, with obs. space standardization"""
+
   def __init__(self, data, initial_investment):
     super(MultiStockEnv, self).__init__()
     self.env = MultiStockEnvUwrapped(data, initial_investment)
     self.action_space = spaces.Discrete(self.env.action_space.size)
-    self.observation_space = spaces.Box(low=-4, high=4,shape=(self.env.state_dim,), dtype=np.float32)
+    self.observation_space = spaces.Box(
+        low=-4, high=4, shape=(self.env.state_dim,), dtype=np.float32)
     self.obs_scaler = self._get_scaler()
     self.reset()
 
@@ -114,7 +121,7 @@ class MultiStockEnv(gym.Env):
   def render(self):
     pass
 
-  def close (self):
+  def close(self):
     pass
 
   def _get_scaler(self):
