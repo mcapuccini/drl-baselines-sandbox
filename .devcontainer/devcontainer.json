@@ -6,12 +6,7 @@
 		"terminal.integrated.shell.linux": "/bin/bash",
 		"python.pythonPath": "/usr/local/bin/python",
 		"python.linting.enabled": true,
-		"python.linting.pylintPath": "/usr/local/bin/pylint",
-		"python.formatting.autopep8Args": ["--indent-size=2"],
-		"[python]": {
-			"editor.insertSpaces": true,
-			"editor.tabSize": 2
-		}
+		"python.linting.pylintPath": "/usr/local/bin/pylint"
 	},
 	"extensions": [
 		"ms-python.python",
