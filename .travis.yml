@@ -7,6 +7,11 @@ branches:
 services:
   - docker
 
+addons:
+  apt:
+    packages:
+      - docker-ce
+
 script:
   - >
     docker build 
