@@ -1,0 +1,18 @@
+language: python
+
+branches:
+    only:
+        - master
+
+services:
+    - docker
+
+script:
+    - docker build -t $TRAVIS_REPO_SLUG .devcontainer/Dockerfile
+
+after_success:
+    - >
+        if [ $TRAVIS_BRANCH = 'master' ] && [ $TRAVIS_PULL_REQUEST = 'false' ]; then
+            docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+            docker push $TRAVIS_REPO_SLUG
+        fi
