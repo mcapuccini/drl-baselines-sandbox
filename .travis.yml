@@ -8,6 +8,7 @@ services:
   - docker
 
 script:
+  - docker pull $TRAVIS_REPO_SLUG || true
   - >
     docker build 
     -t $TRAVIS_REPO_SLUG 
