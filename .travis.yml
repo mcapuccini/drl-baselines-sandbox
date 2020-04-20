@@ -7,16 +7,12 @@ branches:
 services:
   - docker
 
-addons:
-  apt:
-    packages:
-      - docker-ce
-
 script:
   - >
     docker build 
     -t $TRAVIS_REPO_SLUG 
     -f .devcontainer/Dockerfile 
+    --build-arg BUILDKIT_INLINE_CACHE=1
     --cache-from $TRAVIS_REPO_SLUG
     .
 

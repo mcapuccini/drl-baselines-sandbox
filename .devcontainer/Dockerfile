@@ -44,7 +44,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy code in the container
-COPY --chown=$USERNAME:$USERNAME ./ /home/$USERNAME/drl-baselines-sandbox/
+COPY ./ /home/$USERNAME/drl-baselines-sandbox/
+RUN chown -R $USERNAME:$USERNAME /home/$USERNAME/drl-baselines-sandbox/
 
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
