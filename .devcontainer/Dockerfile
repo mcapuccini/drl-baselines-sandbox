@@ -51,4 +51,4 @@ RUN chown -R $USERNAME:$USERNAME /home/$USERNAME/drl-baselines-sandbox/
 ENV DEBIAN_FRONTEND=dialog
 
 # Set working directory
-WORKDIR /home/$USERNAME/gem5-sandbox/
+WORKDIR /home/$USERNAME/drl-baselines-sandbox/
